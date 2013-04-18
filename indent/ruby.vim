@@ -425,7 +425,8 @@ function GetRubyIndent(...)
       let line = getline(line('.'))
 
       if strpart(line, 0, col('.') - 1) =~ '=\s*$' &&
-            \ strpart(line, col('.') - 1, 2) !~ 'do'
+            \ strpart(line, col('.') - 1, 2) !~ 'do' &&
+            \ s:Match(line, s:ruby_indent_keywords)
         let ind = virtcol('.') - 1
       elseif getline(msl) =~ '=\s*\(#.*\)\=$'
         let ind = indent(line('.'))
@@ -558,7 +559,7 @@ function GetRubyIndent(...)
   let col = s:Match(lnum, s:ruby_indent_keywords)
   if col > 0
     call cursor(lnum, col)
-    let ind = virtcol('.') - 1 + &sw
+    let ind = indent('.') + &sw
     " TODO: make this better (we need to count them) (or, if a searchpair
     " fails, we know that something is lacking an end and thus we indent a
     " level
